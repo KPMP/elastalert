@@ -1,4 +1,4 @@
-FROM alpine:latest as py-ea
+FROM alpine:3.8 as py-ea
 ARG ELASTALERT_VERSION=v0.2.0b2
 ENV ELASTALERT_VERSION=${ELASTALERT_VERSION}
 # URL from which to download Elastalert.
@@ -20,9 +20,9 @@ WORKDIR "${ELASTALERT_HOME}"
 
 # Install Elastalert.
 # see: https://github.com/Yelp/elastalert/issues/1654
-RUN sed -i 's/jira>=1.0.10/jira>=1.0.10,<1.0.15/g' setup.py && \
+RUN sed -i 's/jira>=1.0.10/jira>=1.0.10,<1.0.15/g' setup.py && sed -i 's/mock>=2.0.0/mock==3.0.5/g' setup.py &&\
     python setup.py install && \
-    pip install -r requirements.txt
+    pip install apscheduler>=3.3.0 aws-requests-auth>=0.3.0 blist>=1.3.6 boto3>=1.4.4 cffi>=1.11.5 configparser>=3.5.0 croniter>=0.3.16 elasticsearch>=7.0.0 envparse>=0.2.0 exotel>=0.1.3 "jira>=1.0.10,<1.0.15" jsonschema>=3.0.2 mock==3.0.5 prison>=0.1.2 py-zabbix==1.1.3 PyStaticConfiguration>=0.10.3 "python-dateutil>=2.6.0,<2.7.0" python-magic>=0.4.15 PyYAML>=5.1 requests>=2.0.0 stomp.py==4.1.23 texttable>=0.8.8 thehive4py>=1.4.4 twilio==6.0.0
 
 FROM node:alpine
 LABEL maintainer="BitSensor <dev@bitsensor.io>"
